@@ -1,25 +1,11 @@
-import { Message, VoiceChannel } from "discord.js";
 import { ExecuteFunction } from "../interfaces/command";
+import MusicUtil from "../utils/voice";
 
 export const execute: ExecuteFunction = async (_client, message) => {
-  const msg: Message = message;
+  const MUtil = new MusicUtil(message, name);
+  const response = await MUtil.resume();
 
-  // Get the voice channel of the member.
-  const voiceChannel: VoiceChannel = message.member?.voice.channel;
-
-  if (!voiceChannel) {
-    await msg.channel.send(
-      "You need to be in a voice channel to let the bot leave."
-    );
-
-    return;
-  }
-
-  // Get the voice channel connection.
-  const connection = await voiceChannel.join();
-
-  connection.dispatcher.resume();
-  await msg.channel.send(":play_pause: Resuming music.");
+  message.channel.send(response);
 };
 
 export const name: string = "resume";
