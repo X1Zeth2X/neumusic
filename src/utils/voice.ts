@@ -21,6 +21,12 @@ class VoiceUtil {
     this.action = action;
   }
 
+  errorHandler(e: Error) {
+    // Return NotInChannel error message.
+    if (e instanceof NotInChannel) return e.errorMsg();
+    console.log(`An error has occured: ${e}`);
+  }
+
   async getConnection(): Promise<VoiceConnection | undefined> {
     if (this.voiceChannel) {
       return await this.voiceChannel?.join();
@@ -35,13 +41,10 @@ class VoiceUtil {
       (await this.getConnection())?.play(
         ytdl("https://youtu.be/qQP2r-AgvZY", { filter: "audioonly" })
       );
-
       return ":musical_note: Playing music.";
-    } catch (e) {
-      // Return NotInChannel error message.
-      if (e instanceof NotInChannel) return e.errorMsg();
 
-      console.log(`An error has occured: ${e}`);
+    } catch (err) {
+      this.errorHandler(err);
     }
   }
 
@@ -49,13 +52,10 @@ class VoiceUtil {
   async pause(): Promise<string | undefined> {
     try {
       (await this.getConnection())?.dispatcher.pause();
-
       return ":pause_button: Paused the music.";
-    } catch (e) {
-      // Return NotInChannel error message.
-      if (e instanceof NotInChannel) return e.errorMsg();
 
-      console.log(`An error has occured: ${e}`);
+    } catch (err) {
+      this.errorHandler(err);
     }
   }
 
@@ -63,13 +63,10 @@ class VoiceUtil {
   async resume(): Promise<string | undefined> {
     try {
       (await this.getConnection())?.dispatcher.resume();
-
       return ":play_pause: Resumed the music.";
-    } catch (e) {
-      // Return NotInChannel error message.
-      if (e instanceof NotInChannel) return e.errorMsg();
 
-      console.log(`An error has occured: ${e}`);
+    } catch (err) {
+      this.errorHandler(err);
     }
   }
 
@@ -77,14 +74,23 @@ class VoiceUtil {
   async stop(): Promise<string | undefined> {
     try {
       (await this.getConnection())?.dispatcher.destroy();
-
       return ":stop_sign: Stopped the music.";
-    } catch (e) {
-      // Return NotInChannel error message.
-      if (e instanceof NotInChannel) return e.errorMsg();
 
-      console.log(`An error has occured: ${e}`);
+    } catch (err) {
+      this.errorHandler(err);
     }
+  }
+
+  // Leave voice channel.
+  async leave() {
+    try {
+      (await this.getConnection())?.disconnect();
+      return ":musical_note: Leaving the voice channel...";
+
+    } catch (err) {
+      this.errorHandler(err);
+    }
+
   }
 }
 
