@@ -39,7 +39,7 @@ class NeumusicBot extends Client {
   events: Collection<string, Event> = new Collection();
 
   // Run the Bot.
-  async run(token: string | undefined) {
+  async run(token?: string) {
     // Bot login token.
     this.login(token);
 
@@ -66,7 +66,7 @@ class NeumusicBot extends Client {
 
   // Embeds
   embed(options: MessageEmbedOptions, message: Message): MessageEmbed {
-    return new MessageEmbed({ ...options, color: "RANDOM" }).setFooter(
+    return new MessageEmbed({ ...options, color: "DARK_RED" }).setFooter(
       `${message.author.tag} | ${this.user?.username}`,
       message.author.displayAvatarURL({
         format: "png",
