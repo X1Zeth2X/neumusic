@@ -42,7 +42,6 @@ class VoiceUtil {
         ytdl("https://youtu.be/qQP2r-AgvZY", { filter: "audioonly" })
       );
       return ":musical_note: Playing music.";
-
     } catch (err) {
       this.errorHandler(err);
     }
@@ -53,7 +52,6 @@ class VoiceUtil {
     try {
       (await this.getConnection())?.dispatcher.pause();
       return ":pause_button: Paused the music.";
-
     } catch (err) {
       this.errorHandler(err);
     }
@@ -64,7 +62,6 @@ class VoiceUtil {
     try {
       (await this.getConnection())?.dispatcher.resume();
       return ":play_pause: Resumed the music.";
-
     } catch (err) {
       this.errorHandler(err);
     }
@@ -75,22 +72,19 @@ class VoiceUtil {
     try {
       (await this.getConnection())?.dispatcher.destroy();
       return ":stop_sign: Stopped the music.";
-
     } catch (err) {
       this.errorHandler(err);
     }
   }
 
   // Leave voice channel.
-  async leave() {
+  async disconnect(): Promise<string | undefined> {
     try {
       (await this.getConnection())?.disconnect();
       return ":musical_note: Leaving the voice channel...";
-
     } catch (err) {
       this.errorHandler(err);
     }
-
   }
 }
 
