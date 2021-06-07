@@ -21,10 +21,12 @@ class VoiceUtil {
     this.action = action;
   }
 
-  errorHandler(e: Error) {
+  errorHandler(e: Error): string {
     // Return NotInChannel error message.
     if (e instanceof NotInChannel) return e.errorMsg();
+
     console.log(`An error has occured: ${e}`);
+    return ":x: An error occured.";
   }
 
   async getConnection(): Promise<VoiceConnection | undefined> {
@@ -43,7 +45,7 @@ class VoiceUtil {
       );
       return ":musical_note: Playing music.";
     } catch (err) {
-      this.errorHandler(err);
+      return this.errorHandler(err);
     }
   }
 
@@ -53,7 +55,7 @@ class VoiceUtil {
       (await this.getConnection())?.dispatcher.pause();
       return ":pause_button: Paused the music.";
     } catch (err) {
-      this.errorHandler(err);
+      return this.errorHandler(err);
     }
   }
 
@@ -63,7 +65,7 @@ class VoiceUtil {
       (await this.getConnection())?.dispatcher.resume();
       return ":play_pause: Resumed the music.";
     } catch (err) {
-      this.errorHandler(err);
+      return this.errorHandler(err);
     }
   }
 
@@ -73,7 +75,7 @@ class VoiceUtil {
       (await this.getConnection())?.dispatcher.destroy();
       return ":stop_sign: Stopped the music.";
     } catch (err) {
-      this.errorHandler(err);
+      return this.errorHandler(err);
     }
   }
 
@@ -81,9 +83,9 @@ class VoiceUtil {
   async disconnect(): Promise<string | undefined> {
     try {
       (await this.getConnection())?.disconnect();
-      return ":musical_note: Leaving the voice channel...";
+      return ":musical_note: Leaving the voice channel.";
     } catch (err) {
-      this.errorHandler(err);
+      return this.errorHandler(err);
     }
   }
 }
