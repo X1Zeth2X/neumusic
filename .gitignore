@@ -1,3 +1,7 @@
-.env
+# Standard Node libs.
 node_modules
 dist
+
+# Contains API Keys and Secrets.
+.env
+client_secret.json
