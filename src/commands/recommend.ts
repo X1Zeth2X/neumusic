@@ -35,7 +35,8 @@ export const execute: ExecuteFunction = async (client, message, ...args) => {
   // @TODO: Improve error handling.
   if (response.status !== 200) {
     message.channel.send(`:x: **An error occured: ${response.statusText}!**`);
-    if (response.status === 403) message.channel.send(':x: **Quota exceeded!**');
+    if (response.status === 403)
+      message.channel.send(":x: **Quota exceeded!**");
     return;
   }
 
