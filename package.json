@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "ts-node ./src/app.ts",
-    "start": "tsc && node ./dist/app.js",
+    "serve": "node ./dist/app.js",
     "build": "tsc -p ."
   },
   "devDependencies": {
