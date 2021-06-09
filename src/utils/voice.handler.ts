@@ -38,11 +38,9 @@ class VoiceUtil {
   }
 
   // Play
-  async play(): Promise<string | undefined> {
+  async play(url: string): Promise<string | undefined> {
     try {
-      (await this.getConnection())?.play(
-        ytdl("https://youtu.be/qQP2r-AgvZY", { filter: "audioonly" })
-      );
+      (await this.getConnection())?.play(ytdl(url, { filter: "audioonly" }));
       return ":musical_note: Playing music.";
     } catch (err) {
       return this.errorHandler(err);

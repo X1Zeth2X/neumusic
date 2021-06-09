@@ -2,6 +2,8 @@ import { ExecuteFunction } from "../../interfaces/event";
 import { Message } from "discord.js";
 import Command from "../../interfaces/command";
 
+export const name: string = "message";
+
 export const execute: ExecuteFunction = async (client, message: Message) => {
   if (
     message.author.bot ||
@@ -33,5 +35,3 @@ export const execute: ExecuteFunction = async (client, message: Message) => {
     )
   );
 };
-
-export const name: string = "message";
