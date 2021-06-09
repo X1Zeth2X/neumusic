@@ -1,56 +1,48 @@
-import { ExecuteFunction } from "../interfaces/command";
-import YTClient, { YTResponse } from "../client/data-api";
 import moment from "moment";
+import { ExecuteFunction } from "../interfaces/command";
+import YTClient, { YTResponse, PageTokens } from "../client/data-api";
+import RecommendUtil from "../utils/recommend.handler";
 
 export const name: string = "recommend";
 
-export const execute: ExecuteFunction = async (client, message) => {
+export const execute: ExecuteFunction = async (client, message, ...args) => {
+  // Load Client and Util
   const ytClient = new YTClient(process.env.API_KEY);
-  const timeDelta = moment().utc().subtract(20, "minutes").toISOString();
+  const RecUtil = new RecommendUtil(client, message);
 
-  const response = await ytClient.makeRequest(
-    "search/?type=video" +
-      "&videoCategoryId=10" +
-      "&maxResults=5" +
-      "&order=date" +
-      `&publishedAfter=${timeDelta}`
-  );
+  // Set Request Params
+  const timeDelta = RecUtil.getTimeDelta();
+  const regionCode: string = args[0][0];
+  const nextPrev: string = args[0][1];
+
+  await message.channel.send(":mag_right: **Searching...**");
+
+  const reqString = await RecUtil.requestBuilder({ regionCode, pageOption: nextPrev });
+  const response = await ytClient.makeRequest(reqString);
+
+  // @TODO: Improve error handling.
+  if (response.status !== 200) {
+    console.log(response.statusText);
+    message.channel.send(`:x: **An error occured: ${response.statusText}!**`);
+    return;
+  }
 
   const jsonData: YTResponse = await response.json();
 
-  // Store Response Page Info in Cache
-  const pageTokens = {
+  await RecUtil.updatePageTokensCache({
     nextPageToken: jsonData.nextPageToken,
     prevPageToken: jsonData.prevPageToken,
-  };
-
-  await client.cache.set("pageTokens", pageTokens);
+  });
 
   const videosData = await ytClient.loadItems(jsonData.items);
+  await RecUtil.sendVideosData(videosData);
 
-  for (const videoData of videosData) {
-    message.channel.send(
-      client.embed(
-        {
-          title: videoData.videoTitle,
-          thumbnail: {
-            url: videoData.videoThumbnail
-          },
-          url: videoData.videoUrl,
-          description: videoData.videoDesc,
-        },
-
-        message
-      )
-    );
-  }
-
-  const pageInfo = jsonData.pageInfo;
+  // Send a response message.
   const msg = `:card_box: **${
-    pageInfo.totalResults
+    jsonData.pageInfo.totalResults
   }** uploads since :date: ${moment
     .utc(timeDelta)
-    .format("MMMM Do YYYY, h:mm:ssA")} **UTC**.`;
+    .format("MMMM Do YYYY, h:mmA")} **UTC**`;
 
   message.channel.send(msg);
 };
