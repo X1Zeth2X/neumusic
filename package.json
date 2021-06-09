@@ -5,6 +5,9 @@
   "main": "dist/app.js",
   "author": "Zeth Leonardo",
   "license": "MIT",
+  "engines": {
+    "node": ">=14.17.0"
+  },
   "scripts": {
     "dev": "ts-node ./src/app.ts",
     "serve": "node ./dist/app.js",
