@@ -1,5 +1,5 @@
 import { ExecuteFunction } from "../interfaces/command";
-import MusicUtil from "../utils/voice";
+import MusicUtil from "../utils/voice.handler";
 
 export const name: string = "pause";
 
