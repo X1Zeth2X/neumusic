@@ -76,5 +76,10 @@ type VideoData = {
   videoUrl: string;
 };
 
-export { YTResponse, YTClient };
+type PageTokens = {
+  nextPageToken?: string;
+  prevPageToken?: string;
+};
+
+export { VideoData, PageTokens, YTResponse, YTClient };
 export default YTClient;
