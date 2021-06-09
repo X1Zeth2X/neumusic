@@ -10,6 +10,7 @@ import {
 import { promisify } from "util";
 import consola, { Consola } from "consola";
 import glob from "glob";
+import Keyv from "keyv";
 
 // Relative Imports
 import Command from "../interfaces/command";
@@ -18,6 +19,8 @@ import Event from "../interfaces/event";
 const globPromise: Function = promisify(glob);
 
 class NeumusicBot extends Client {
+  cache: Keyv;
+
   constructor() {
     /* https://discord.js.org/#/docs/main/stable/typedef/ClientOptions */
     super({
@@ -29,6 +32,9 @@ class NeumusicBot extends Client {
       messageSweepInterval: 60,
       messageEditHistoryMaxSize: 0,
     });
+
+    // Create a new cache with Keyv (in-memory storage);
+    this.cache = new Keyv();
   }
 
   // Console Logger: https://github.com/unjs/consola
@@ -67,7 +73,7 @@ class NeumusicBot extends Client {
   // Embeds
   embed(options: MessageEmbedOptions, message: Message): MessageEmbed {
     return new MessageEmbed({ ...options, color: "DARK_RED" }).setFooter(
-      `${message.author.tag} | ${this.user?.username}`,
+      `Requested by ${message.author.tag} | ${this.user?.username} - Beta`,
       message.author.displayAvatarURL({
         format: "png",
         dynamic: true,
