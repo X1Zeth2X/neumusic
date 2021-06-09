@@ -1,7 +1,8 @@
+import { Message } from "discord.js";
 import NeumusicBot from "../client/bot";
 
 interface ExecuteFunction {
-  (client: NeumusicBot, ...args: Array<any>): Promise<void>;
+  (client: NeumusicBot, message: Message, ...args: Array<any>): Promise<void>;
 }
 
 interface Command {
