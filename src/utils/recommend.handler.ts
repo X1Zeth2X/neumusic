@@ -61,15 +61,14 @@ class RecommendUtil {
   }
 
   async getCachePageTokens(): Promise<PageTokens> {
-    return await this.client.cache.get('pageTokens');
+    return await this.client.cache.get("pageTokens");
   }
 
   async requestBuilder(data: RequestData): Promise<string> {
-    const req = (
+    const req =
       "search/?type=video&videoCategoryId=10&maxResults=5&order=date" +
       `&publishedAfter=${this.getTimeDelta()}` +
-      `&regionCode=${data.regionCode ? data.regionCode : "US"}`
-    );
+      `&regionCode=${data.regionCode ? data.regionCode.toUpperCase() : "US"}`;
 
     if (data.pageOption) {
       const pageTokens = await this.getCachePageTokens();
@@ -78,10 +77,10 @@ class RecommendUtil {
       let pageToken;
 
       switch (data.pageOption.toLowerCase()) {
-        case 'next':
+        case "next":
           pageToken = pageTokens.nextPageToken;
           break;
-        case 'prev':
+        case "prev":
           pageToken = pageTokens.nextPageToken;
           break;
       }
@@ -96,6 +95,6 @@ class RecommendUtil {
 type RequestData = {
   regionCode?: string;
   pageOption?: string;
-}
+};
 
 export default RecommendUtil;
